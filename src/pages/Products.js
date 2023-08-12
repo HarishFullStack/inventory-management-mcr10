@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { InventoryContext } from "../context/InventoryContext";
 
@@ -9,7 +9,6 @@ export function Products(){
     const {department} = useParams();
     const {inventory} = useContext(InventoryContext); 
 
-    const [products, setProducts] = useState([]);
     const [departments, setDepartments] = useState([]);
 
     const getProductsByDepartment = () => {
@@ -19,44 +18,111 @@ export function Products(){
         const uniqueDepartments = allDepartments.filter((x, i) => allDepartments.indexOf(x) === i);
 
         setDepartments(uniqueDepartments);
-        setProducts(products);
+        dispatch({type: "INITIAL", value: products});
+
     }
 
     useEffect(() => {
         getProductsByDepartment();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const setState = (state) => {
+        let sortedData = state.initialProducts
+
+        // DEPARTMENT
+        sortedData = sortedData.filter((item) => item.department === state.department)
+    
+        // LOWSTOCKITEMS
+        sortedData = state.lowStockItems
+            ? sortedData.filter((item) => item.stock <= 10)
+            : sortedData;
+        
+        //SORT BY
+        sortedData =
+        state.sortBy !== ""
+        ? sortedData.sort((a, b) =>
+            state.sortBy === "name"
+                ? b.name - a.name : state.sortBy === "price" ? Number(a.price) - Number(b.price) : Number(a.stock) - Number(b.stock)
+            )
+        : sortedData;
+    
+        return { ...state, filteredProducts: sortedData };
+        };
+        
+    const reducer = (state, action) => {
+
+        switch (action.type) {
+            case "INITIAL":
+                    return setState({
+                        ...state,
+                        filteredProducts: action.value,
+                        initialProducts: action.value
+                    });
+
+            case "DEPARTMENT":
+                return setState({...state, department: action.value});
+        
+            case "LOWSTOCKITEMS":
+                return setState({...state, lowStockItems: action.value});
+
+            case "SORT":
+                return setState({
+                    ...state,
+                    sortBy: action.value
+            });
+
+            case "CLEAR":
+                return setState({
+                    ...state, 
+                    price: Number(Math.max(...state.initialProducts.map(o => o.price))),
+                    categories: [],
+                    ratings: "",
+                    sortBy: ""
+                })
+            default:
+
+            return state;
+        }
+    };
+
+    const [state, dispatch] = useReducer(reducer, {
+        department: "",
+        lowStockItems: false,
+        sortBy: "",
+        initialProducts: inventory,
+        filteredProducts: []
+    });
 
     return(
         <div>
             <div className="row mt-5"><h1 className=" col-md-2">Products</h1> 
             <div className="col-md-2">
             <div className="form-floating mb-3">
-            {/* onChange={(event) => dispatch({ type: "DEPARTMENT", value: event.target.value})} */}
-                    <select className="form-select" id="floatingSelect" aria-label="Floating label select example">
-                        <option selected>Select Department</option>
-                        {
-                            departments && departments.map((x) => {
-                                return(
-                                    <option key={x} value={x.toLowerCase()}>{x}</option>
-                                )
-                            })
-                        }
-                    </select>
-                    <label htmlFor="floatingSelect">Department</label>
+                <select className="form-select" id="floatingSelect" aria-label="Floating label select example" onChange={(event) => dispatch({ type: "DEPARTMENT", value: event.target.value})}>
+                    <option selected>Select Department</option>
+                    {
+                        departments && departments.map((x) => {
+                            return(
+                                <option key={x} value={x.toLowerCase()}>{x}</option>
+                            )
+                        })
+                    }
+                </select>
+                <label htmlFor="floatingSelect">Department</label>
                 </div>
                 </div>
             <div className="col-md-2 m-auto">
-                <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off"/>
-                <label class="btn btn-outline-primary" for="btncheck1">Low Stock Items</label>
+                <div className="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <input type="checkbox" className="btn-check" id="btncheck1" autoComplete="off"  onChange={(event) => dispatch({ type: "LOWSTOCKITEMS", value: event.target.value})}/>
+                <label className="btn btn-outline-primary" htmlFor="btncheck1">Low Stock Items</label>
 
                 </div>
                 </div>
                 <div className="col-md-2">
 
                 <div className="form-floating mb-3">
-            {/* onChange={(event) => dispatch({ type: "DEPARTMENT", value: event.target.value})} */}
-                    <select className="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <select className="form-select" id="floatingSelect" aria-label="Floating label select example"  onChange={(event) => dispatch({ type: "SORTBY", value: event.target.value})}>
                         <option value="name">Name</option>
                         <option value="price">Price</option>
                         <option value="stock">Stock</option>
@@ -70,7 +136,7 @@ export function Products(){
             </div>
             </div>
             <div>
-                    <table class="table">
+                    <table className="table">
                         <thead>
                             <tr>
                                 <th>Image</th>
@@ -82,10 +148,10 @@ export function Products(){
                             </tr>
                         </thead>
                         <tbody>
-                            {products && products.map((x) => {
+                            {state.filteredProducts && state.filteredProducts.map((x) => {
                                 return(
-                                <tr>
-                                    <td><img src={x.imageUrl}/></td>
+                                <tr key={x.id}>
+                                    <td><img src={x.imageUrl} alt="not found"/></td>
                                     <td><a href={`/product/${x.id}`}>{x.name}</a></td>
                                     <td>{x.description}</td>
                                     <td>{x.price}</td>

@@ -17,14 +17,15 @@ export function Departments(){
 
     useEffect(()=>{
         getDepartments();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return(
         <div className="row p-5">{departments && departments.map((x) => {
             return(
-                <div class="card m-auto mt-auto cursor-pointer" style={{width: "18rem"}} key={x} onClick={() => navigate(`/products/${x.toLowerCase()}`)}>
-                <div class="card-body text-center bg-light">
-                    <h2 class="card-title">{x}</h2>
+                <div className="card m-auto mt-auto cursor-pointer" style={{width: "18rem"}} key={x} onClick={() => navigate(`/products/${x.toLowerCase()}`)}>
+                <div className="card-body text-center bg-light">
+                    <h2 className="card-title">{x}</h2>
                 </div>
             </div>
             )

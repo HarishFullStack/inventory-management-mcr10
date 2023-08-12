@@ -15,6 +15,7 @@ export function ProductManagement(){
 
     useEffect(()=>{
         getDepartments();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const reducer = (state, action) => {
@@ -37,6 +38,8 @@ export function ProductManagement(){
                 return {...state, delivered: Number(action.value)}
             case "IMAGE":
                 return {...state, imageUrl: action.value}
+            default:
+                return {...state}
         }
     }
 

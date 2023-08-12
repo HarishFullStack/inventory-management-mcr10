@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { InventoryContext } from "../context/InventoryContext";
 
 export function Product(){
@@ -15,11 +15,12 @@ export function Product(){
 
     useEffect(() => {
         getProductsById();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return(
         <div><h1>{product.name}</h1>
-            <img className="big-image" src={product.imageUrl}></img>
+            <img className="big-image" src={product.imageUrl} alt="not found"></img>
 
         </div>
     )

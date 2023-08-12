@@ -11,15 +11,15 @@ function App() {
     <div className="App container-fluid " style={{border: '1px solid red'}}>
       <div className='row'>
       <div className='col-md-2 bg-dark' style={{border: '1px solid red'}}>
-      <ul class="nav flex-column p-3 m-auto">
-        <li class="nav-item fs-1">
+      <ul className="nav flex-column p-3 m-auto">
+        <li className="nav-item fs-1">
           <NavLink className={'text-decoration-none'} to='/'>Dashboard</NavLink>
         </li>
-        <li class="nav-item fs-1">
+        <li className="nav-item fs-1">
           <NavLink className={'text-decoration-none'} to='/departments'>Departments</NavLink>
         </li>
-        <li class="nav-item fs-1">
-          <NavLink className={'text-decoration-none'} to='/products'>Products</NavLink>
+        <li className="nav-item fs-1">
+          <NavLink className={'text-decoration-none'} to='/products/kitchen'>Products</NavLink>
         </li>
       </ul>
       </div>
