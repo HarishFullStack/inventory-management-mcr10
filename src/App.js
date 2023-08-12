@@ -8,22 +8,22 @@ import { ProductManagement } from './pages/ProductManagement';
 
 function App() {
   return (
-    <div className="App container-fluid " style={{border: '1px solid red'}}>
-      <div className='row'>
-      <div className='col-md-2 bg-dark' style={{border: '1px solid red'}}>
+    <div className="App container-fluid ">
+      <div className='row main' >
+      <div className='col-md-2 bg-dark'>
       <ul className="nav flex-column p-3 m-auto">
-        <li className="nav-item fs-1">
-          <NavLink className={'text-decoration-none'} to='/'>Dashboard</NavLink>
+        <li className="nav-item fs-1 mt-5">
+          <NavLink className={({ isActive }) => (isActive ? "selected" : "")} activeClassName="selected" to='/'>Dashboard</NavLink>
         </li>
-        <li className="nav-item fs-1">
-          <NavLink className={'text-decoration-none'} to='/departments'>Departments</NavLink>
+        <li className="nav-item fs-1 mt-5">
+          <NavLink className={({ isActive }) => (isActive ? "selected" : "")} to='/departments'>Departments</NavLink>
         </li>
-        <li className="nav-item fs-1">
-          <NavLink className={'text-decoration-none'} to='/products/kitchen'>Products</NavLink>
+        <li className="nav-item fs-1 mt-5">
+          <NavLink className={({ isActive }) => (isActive ? "selected" : "")} to='/products/Kitchen'>Products</NavLink>
         </li>
       </ul>
       </div>
-      <div className='col-md-10'  style={{border: '1px solid red'}}>
+      <div className='col-md-10'>
         <Routes>
           <Route path="/" element={<Dashboard/>}>Dashboard</Route>
           <Route path="/departments" element={<Departments/>}>Departments</Route>

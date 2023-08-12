@@ -10,15 +10,16 @@ export function Products(){
     const {inventory} = useContext(InventoryContext); 
 
     const [departments, setDepartments] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState("");
 
     const getProductsByDepartment = () => {
-        const products = inventory.filter((product) => product.department.toLowerCase() === department.toLowerCase());
-        
         const allDepartments = inventory.map((x) => x.department);
         const uniqueDepartments = allDepartments.filter((x, i) => allDepartments.indexOf(x) === i);
 
         setDepartments(uniqueDepartments);
-        dispatch({type: "INITIAL", value: products});
+        dispatch({type: "INITIAL", value: inventory});
+        dispatch({type: "DEPARTMENT", value: department});
+        setSelectedDepartment(department);
 
     }
 
@@ -31,7 +32,7 @@ export function Products(){
         let sortedData = state.initialProducts
 
         // DEPARTMENT
-        sortedData = sortedData.filter((item) => item.department === state.department)
+        sortedData = state.department !== "" ? sortedData.filter((item) => item.department === state.department) : sortedData;
     
         // LOWSTOCKITEMS
         sortedData = state.lowStockItems
@@ -43,7 +44,7 @@ export function Products(){
         state.sortBy !== ""
         ? sortedData.sort((a, b) =>
             state.sortBy === "name"
-                ? b.name - a.name : state.sortBy === "price" ? Number(a.price) - Number(b.price) : Number(a.stock) - Number(b.stock)
+                ? (b.name > a.name? -1 : 1 ) : state.sortBy === "price" ? Number(a.price) - Number(b.price) : Number(a.stock) - Number(b.stock)
             )
         : sortedData;
     
@@ -66,7 +67,7 @@ export function Products(){
             case "LOWSTOCKITEMS":
                 return setState({...state, lowStockItems: action.value});
 
-            case "SORT":
+            case "SORTBY":
                 return setState({
                     ...state,
                     sortBy: action.value
@@ -95,16 +96,16 @@ export function Products(){
     });
 
     return(
-        <div>
+        <div className="px-5">
             <div className="row mt-5"><h1 className=" col-md-2">Products</h1> 
             <div className="col-md-2">
             <div className="form-floating mb-3">
-                <select className="form-select" id="floatingSelect" aria-label="Floating label select example" onChange={(event) => dispatch({ type: "DEPARTMENT", value: event.target.value})}>
+                <select className="form-select" id="floatingSelect" value={selectedDepartment} aria-label="Floating label select example" onChange={(event) => dispatch({ type: "DEPARTMENT", value: event.target.value})}>
                     <option selected>Select Department</option>
                     {
                         departments && departments.map((x) => {
                             return(
-                                <option key={x} value={x.toLowerCase()}>{x}</option>
+                                <option key={x} value={x}>{x}</option>
                             )
                         })
                     }
@@ -114,7 +115,7 @@ export function Products(){
                 </div>
             <div className="col-md-2 m-auto">
                 <div className="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <input type="checkbox" className="btn-check" id="btncheck1" autoComplete="off"  onChange={(event) => dispatch({ type: "LOWSTOCKITEMS", value: event.target.value})}/>
+                <input type="checkbox" className="btn-check" id="btncheck1" autoComplete="off"  onChange={(event) => dispatch({ type: "LOWSTOCKITEMS", value: event.target.checked})}/>
                 <label className="btn btn-outline-primary" htmlFor="btncheck1">Low Stock Items</label>
 
                 </div>
@@ -123,6 +124,7 @@ export function Products(){
 
                 <div className="form-floating mb-3">
                     <select className="form-select" id="floatingSelect" aria-label="Floating label select example"  onChange={(event) => dispatch({ type: "SORTBY", value: event.target.value})}>
+                    <option selected>Select sort by</option>
                         <option value="name">Name</option>
                         <option value="price">Price</option>
                         <option value="stock">Stock</option>

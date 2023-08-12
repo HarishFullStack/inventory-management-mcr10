@@ -5,3 +5,19 @@ img{
 .big-image{
     width: 500px !important;
 }
+
+.main{
+    height: 100vh;
+}
+
+p{
+    font-weight: 600;
+}
+
+.selected{
+    color: aliceblue;
+}
+
+.nav-item>a {
+    text-decoration: none !important;
+}
