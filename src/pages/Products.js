@@ -32,7 +32,7 @@ export function Products(){
         let sortedData = state.initialProducts
 
         // DEPARTMENT
-        sortedData = state.department !== "" ? sortedData.filter((item) => item.department === state.department) : sortedData;
+        sortedData = state.department !== undefined && state.department !== "" ? sortedData.filter((item) => item.department === state.department) : state.initialProducts;
     
         // LOWSTOCKITEMS
         sortedData = state.lowStockItems

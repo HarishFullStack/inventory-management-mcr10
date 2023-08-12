@@ -13,13 +13,13 @@ function App() {
       <div className='col-md-2 bg-dark'>
       <ul className="nav flex-column p-3 m-auto">
         <li className="nav-item fs-1 mt-5">
-          <NavLink className={({ isActive }) => (isActive ? "selected" : "")} activeClassName="selected" to='/'>Dashboard</NavLink>
+          <NavLink className={({ isActive }) => (isActive ? "selected" : "")} to='/'>Dashboard</NavLink>
         </li>
         <li className="nav-item fs-1 mt-5">
           <NavLink className={({ isActive }) => (isActive ? "selected" : "")} to='/departments'>Departments</NavLink>
         </li>
         <li className="nav-item fs-1 mt-5">
-          <NavLink className={({ isActive }) => (isActive ? "selected" : "")} to='/products/Kitchen'>Products</NavLink>
+          <NavLink className={({ isActive }) => (isActive ? "selected" : "")} to='/products'>Products</NavLink>
         </li>
       </ul>
       </div>
@@ -28,6 +28,7 @@ function App() {
           <Route path="/" element={<Dashboard/>}>Dashboard</Route>
           <Route path="/departments" element={<Departments/>}>Departments</Route>
           <Route path="/products/:department" element={<Products/>}>Products</Route>
+          <Route path="/products/" element={<Products/>}>Products</Route>
           <Route path="/product-management" element={<ProductManagement/>}>Products</Route>
           <Route path="/product/:productId" element={<Product/>}>Products</Route>
         </Routes>
