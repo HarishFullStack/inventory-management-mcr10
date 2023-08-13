@@ -21,3 +21,7 @@ p{
 .nav-item>a {
     text-decoration: none !important;
 }
+
+.department>.card{
+    cursor: pointer;
+}

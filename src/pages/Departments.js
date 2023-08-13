@@ -21,9 +21,9 @@ export function Departments(){
     }, [])
 
     return(
-        <div className="row p-5">{departments && departments.map((x) => {
+        <div className="row department p-5">{departments && departments.map((x) => {
             return(
-                <div className="card m-auto mt-auto cursor-pointer" style={{width: "18rem"}} key={x} onClick={() => navigate(`/products/${x}`)}>
+                <div className="card m-auto mt-auto" style={{width: "18rem"}} key={x} onClick={() => navigate(`/products/${x}`)}>
                 <div className="card-body text-center bg-light">
                     <h2 className="card-title">{x}</h2>
                 </div>
